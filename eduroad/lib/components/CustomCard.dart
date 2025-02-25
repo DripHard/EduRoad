@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CustomCard extends StatefulWidget {
   final Map<String, String> data;
@@ -95,9 +96,15 @@ class _CustomCardState extends State<CustomCard> {
     );
   }
 
-  void _launchURL(String? url) {
-    if (url != null) {
-      // Implement your URL launcher logic here
+  void _launchURL(String? url) async {
+    if (url != null && url.isNotEmpty) {
+      final Uri uri = Uri.parse(url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        print('Could not launch $url');
+      }
     }
   }
+
 }

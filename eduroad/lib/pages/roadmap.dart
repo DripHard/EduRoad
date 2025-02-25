@@ -32,17 +32,17 @@ class _RoadmapState extends State<Roadmap> {
       'article': 'https://www.researchgate.net/publication/351758474_Introduction_to_Artificial_Intelligence'
     },
     {
-      'title': 'Introduction to AI',
+      'title': 'Machine Learing',
       'video': 'https://youtu.be/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
       'article': 'https://www.researchgate.net/publication/351758474_Introduction_to_Artificial_Intelligence'
     },
     {
-      'title': 'Fundamentals',
+      'title': 'Deep Learning',
       'video': 'https://youtu.be/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
       'article': 'https://www.researchgate.net/publication/351758474_Introduction_to_Artificial_Intelligence'
     },
     {
-      'title': 'Python Essentials', // Fixed typo from "Phython Essentials"
+      'title': 'Large Language Models', // Fixed typo from "Phython Essentials"
       'video': 'https://youtu.be/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
       'article': 'https://www.researchgate.net/publication/351758474_Introduction_to_Artificial_Intelligence'
     },
