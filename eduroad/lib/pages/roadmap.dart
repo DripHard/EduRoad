@@ -1,3 +1,4 @@
+import 'package:eduroad/components/CustomCard.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
@@ -55,7 +56,7 @@ class _RoadmapState extends State<Roadmap> {
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Hero (
             tag: 'searchbar',
@@ -112,6 +113,8 @@ class _RoadmapState extends State<Roadmap> {
               ),
             ),
           ),
+          SizedBox(height: 80),
+          CustomCard(data: manualData[0])
         ],
       ),
     );
