@@ -2,8 +2,6 @@ import 'package:eduroad/components/CustomCard.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class Roadmap extends StatefulWidget {
   final String searchQuery;
@@ -20,12 +18,32 @@ class _RoadmapState extends State<Roadmap> {
   List<Map<String, String>> manualData = [
     {
       'title': 'Introduction to AI',
-      'video': 'https://youtu.be/SSE4M0gcmvE?si=XLCi-dfibyMsS45N ',
+      'video': 'https://youtu.be/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
       'article': 'https://www.researchgate.net/publication/351758474_Introduction_to_Artificial_Intelligence'
     },
     {
       'title': 'Fundamentals',
-      'video': 'https://youtu.be/SSE4M0gcmvE?si=XLCi-dfibyMsS45N ',
+      'video': 'https://youtu.be/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
+      'article': 'https://www.researchgate.net/publication/351758474_Introduction_to_Artificial_Intelligence'
+    },
+    {
+      'title': 'Python Essentials', // Fixed typo from "Phython Essentials"
+      'video': 'https://youtu.be/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
+      'article': 'https://www.researchgate.net/publication/351758474_Introduction_to_Artificial_Intelligence'
+    },
+    {
+      'title': 'Introduction to AI',
+      'video': 'https://youtu.be/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
+      'article': 'https://www.researchgate.net/publication/351758474_Introduction_to_Artificial_Intelligence'
+    },
+    {
+      'title': 'Fundamentals',
+      'video': 'https://youtu.be/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
+      'article': 'https://www.researchgate.net/publication/351758474_Introduction_to_Artificial_Intelligence'
+    },
+    {
+      'title': 'Python Essentials', // Fixed typo from "Phython Essentials"
+      'video': 'https://youtu.be/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
       'article': 'https://www.researchgate.net/publication/351758474_Introduction_to_Artificial_Intelligence'
     },
   ];
@@ -44,8 +62,8 @@ class _RoadmapState extends State<Roadmap> {
 
   @override
   Widget build(BuildContext context) {
-    return Container (
-      padding: EdgeInsets.fromLTRB(30, 20, 30, 0),
+    return Container(
+      padding: const EdgeInsets.fromLTRB(30, 20, 30, 0),
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -55,10 +73,8 @@ class _RoadmapState extends State<Roadmap> {
         ),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Hero (
+          Hero(
             tag: 'searchbar',
             child: Material(
               color: Colors.transparent,
@@ -69,7 +85,7 @@ class _RoadmapState extends State<Roadmap> {
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.25),
-                      offset: Offset(0, 4),
+                      offset: const Offset(0, 4),
                       blurRadius: 4,
                     ),
                   ],
@@ -87,16 +103,13 @@ class _RoadmapState extends State<Roadmap> {
                           color: const Color.fromARGB(255, 196, 196, 196).withOpacity(0.6),
                           fontWeight: FontWeight.w400,
                         ),
-                        suffixIcon: Icon(Icons.search,
-                            color: Colors.white.withOpacity(0.6)),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20)),
+                        suffixIcon: Icon(Icons.search, color: Colors.white.withOpacity(0.6)),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
                         filled: true,
                         fillColor: Colors.white.withOpacity(0.05),
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 25, vertical: 30),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 25, vertical: 30),
                       ),
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                       onSubmitted: (value) {
                         if (value.isNotEmpty) {
                           Navigator.push(
@@ -113,8 +126,19 @@ class _RoadmapState extends State<Roadmap> {
               ),
             ),
           ),
-          SizedBox(height: 80),
-          CustomCard(data: manualData[0])
+          const SizedBox(height: 80),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: manualData.map((data) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 50),
+                    child: CustomCard(data: data),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
         ],
       ),
     );
