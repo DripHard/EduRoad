@@ -18,31 +18,31 @@ class _RoadmapState extends State<Roadmap> {
   List<Map<String, String>> manualData = [
     {
       'title': 'Introduction to AI',
-      'video': 'https://youtu.be/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
+      'video': 'https://youtube/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
       'article': 'https://www.researchgate.net/publication/351758474_Introduction_to_Artificial_Intelligence'
     },
     {
       'title': 'Fundamentals',
-      'video': 'https://youtu.be/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
+      'video': 'https://youtube/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
       'article': 'https://www.researchgate.net/publication/351758474_Introduction_to_Artificial_Intelligence'
     },
     {
-      'title': 'Python Essentials', // Fixed typo from "Phython Essentials"
-      'video': 'https://youtu.be/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
+      'title': 'Python Essentials',
+      'video': 'https://youtube/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
       'article': 'https://www.researchgate.net/publication/351758474_Introduction_to_Artificial_Intelligence'
     },
     {
       'title': 'Machine Learing',
-      'video': 'https://youtu.be/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
+      'video': 'https://youtube/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
       'article': 'https://www.researchgate.net/publication/351758474_Introduction_to_Artificial_Intelligence'
     },
     {
       'title': 'Deep Learning',
-      'video': 'https://youtu.be/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
+      'video': 'https://youtube/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
       'article': 'https://www.researchgate.net/publication/351758474_Introduction_to_Artificial_Intelligence'
     },
     {
-      'title': 'Large Language Models', // Fixed typo from "Phython Essentials"
+      'title': 'Large Language Models',
       'video': 'https://youtu.be/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
       'article': 'https://www.researchgate.net/publication/351758474_Introduction_to_Artificial_Intelligence'
     },
@@ -63,7 +63,7 @@ class _RoadmapState extends State<Roadmap> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(30, 20, 30, 0),
+      padding: const EdgeInsets.fromLTRB(30, 45, 30, 0),
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
