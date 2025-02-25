@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:ui';
+import 'package:eduroad/pages/roadmap.dart';
+
 
 void main() async {
   runApp(const MyApp());
@@ -28,6 +30,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+  TextEditingController searchController = TextEditingController();
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -106,7 +109,9 @@ class HomePage extends StatelessWidget {
             left: 30,
             right: 30,
             bottom: 100,
-            child: Material(
+            child: Hero (
+              tag: 'searchbar',
+              child: Material(
               color: Colors.transparent,
               child: Container(
                 decoration: BoxDecoration(
@@ -125,6 +130,7 @@ class HomePage extends StatelessWidget {
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
                     child: TextField(
+                      controller: searchController,
                       decoration: InputDecoration(
                         hintText: "Search...",
                         hintStyle: GoogleFonts.bricolageGrotesque(
@@ -142,8 +148,32 @@ class HomePage extends StatelessWidget {
                             EdgeInsets.symmetric(horizontal: 25, vertical: 35),
                       ),
                       style: TextStyle(color: Colors.white),
+                      onSubmitted: (value) {
+                        if (value.isNotEmpty) {
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              transitionDuration: Duration(milliseconds: 500), // Smooth transition
+                              pageBuilder: (context, animation, secondaryAnimation) => Roadmap(searchQuery: value),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                return SlideTransition(
+                                  position: Tween<Offset>(
+                                    begin: Offset(0, 0.2), // Start slightly below
+                                    end: Offset(0, 0), // Move up to normal position
+                                  ).animate(CurvedAnimation(
+                                    parent: animation,
+                                    curve: Curves.easeIn, // Smooth easing effect
+                                  )),
+                                  child: child,
+                                );
+                              },
+                            ),
+                          );
+                        }
+                      },
                     ),
                   ),
+                ),
                 ),
               ),
             ),
