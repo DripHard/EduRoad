@@ -1,4 +1,6 @@
 import 'package:eduroad/components/CustomCard.dart';
+import 'package:eduroad/features/notes.dart';
+import 'package:eduroad/features/roadmap.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,49 +11,26 @@ class Roadmap extends StatefulWidget {
   const Roadmap({super.key, required this.searchQuery});
 
   @override
-  _RoadmapState createState() => _RoadmapState();
+  State<Roadmap>  createState() => _RoadmapState();
 }
 
 class _RoadmapState extends State<Roadmap> {
   late TextEditingController _searchController;
+    List<String> titles = [];
+    List<Map<String,String>> manualData = [];
 
-  List<Map<String, String>> manualData = [
-    {
-      'title': 'Introduction to AI',
-      'video': 'https://youtu.be/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
-      'article': 'https://www.researchgate.net/publication/351758474_Introduction_to_Artificial_Intelligence'
-    },
-    {
-      'title': 'Fundamentals',
-      'video': 'https://youtu.be/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
-      'article': 'https://www.researchgate.net/publication/351758474_Introduction_to_Artificial_Intelligence'
-    },
-    {
-      'title': 'Python Essentials', // Fixed typo from "Phython Essentials"
-      'video': 'https://youtu.be/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
-      'article': 'https://www.researchgate.net/publication/351758474_Introduction_to_Artificial_Intelligence'
-    },
-    {
-      'title': 'Machine Learing',
-      'video': 'https://youtu.be/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
-      'article': 'https://www.researchgate.net/publication/351758474_Introduction_to_Artificial_Intelligence'
-    },
-    {
-      'title': 'Deep Learning',
-      'video': 'https://youtu.be/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
-      'article': 'https://www.researchgate.net/publication/351758474_Introduction_to_Artificial_Intelligence'
-    },
-    {
-      'title': 'Large Language Models', // Fixed typo from "Phython Essentials"
-      'video': 'https://youtu.be/SSE4M0gcmvE?si=XLCi-dfibyMsS45N',
-      'article': 'https://www.researchgate.net/publication/351758474_Introduction_to_Artificial_Intelligence'
-    },
-  ];
-
+    Future<void> fetchData() async {
+        List<String> results  = await RoadMapService.fetch(widget.searchQuery);
+        setState(() {
+            titles = results;
+            manualData = titles.map((title) => {"title": title, "video": "youtube.com", "article": "wiki.com"}).toList();
+        });
+    }
   @override
   void initState() {
     super.initState();
     _searchController = TextEditingController(text: widget.searchQuery);
+    fetchData();
   }
 
   @override

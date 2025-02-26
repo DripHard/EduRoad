@@ -8,9 +8,10 @@ import 'package:eduroad/pages/roadmap.dart';
 
 
 void main() async {
-  runApp(const MyApp());
+    WidgetsFlutterBinding.ensureInitialized();
+    await dotenv.load(fileName: ".env");
+    runApp(const MyApp());
 
-  await dotenv.load(fileName: ".env");
 }
 
 class MyApp extends StatelessWidget {
