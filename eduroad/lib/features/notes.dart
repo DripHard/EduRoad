@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:eduroad/services/api_service.dart';
 
-class initNotes extends StatefulWidget{
+class InitNotes extends StatefulWidget{
     final String title;
 
-     const initNotes(this.title, {Key? key}) : super(key: key);
+    const InitNotes(this.title, {super.key});
 
     @override
-    _initNotesState createState() => _initNotesState();
+    State<InitNotes>  createState() => _InitNotesState();
 }
 
-class _initNotesState extends State<initNotes> {
+class _InitNotesState extends State<InitNotes> {
     String? info;
 
     @override
