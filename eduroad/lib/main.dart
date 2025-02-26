@@ -45,7 +45,7 @@ class HomePage extends StatelessWidget {
       child: Stack(
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(30, 20, 30, 0),
+            padding: EdgeInsets.fromLTRB(30, 45, 30, 0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,80 +106,87 @@ class HomePage extends StatelessWidget {
               ],
             ),
           ),
-
-          Positioned(
-            left: 30,
-            right: 30,
-            bottom: 100,
-            child: Hero (
-              tag: 'searchbar',
-              child: Material(
-              color: Colors.transparent,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.25),
-                      offset: Offset(0, 4),
-                      blurRadius: 4,
-                    ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-                    child: TextField(
-                      controller: searchController,
-                      decoration: InputDecoration(
-                        hintText: "Search...",
-                        hintStyle: GoogleFonts.bricolageGrotesque(
-                          fontSize: 18,
-                          color: const Color.fromARGB(255, 196, 196, 196).withOpacity(0.6),
-                          fontWeight: FontWeight.w400,
-                        ),
-                        suffixIcon: Icon(Icons.search,
-                            color: Colors.white.withOpacity(0.6)),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        filled: true,
-                        fillColor: Colors.white.withOpacity(0.05),
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 25, vertical: 35),
+          Scaffold(
+            backgroundColor: Colors.transparent,
+            resizeToAvoidBottomInset: true,
+            body: Stack(
+              children: [
+                Positioned(
+                  left: 30,
+                  right: 30,
+                  bottom: 100,
+                  child: Hero (
+                    tag: 'searchbar',
+                    child: Material(
+                    color: Colors.transparent,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.05),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.25),
+                            offset: Offset(0, 4),
+                            blurRadius: 4,
+                          ),
+                        ],
                       ),
-                      style: TextStyle(color: Colors.white),
-                      onSubmitted: (value) {
-                        if (value.isNotEmpty) {
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              transitionDuration: Duration(milliseconds: 500), // Smooth transition
-                              pageBuilder: (context, animation, secondaryAnimation) => Roadmap(searchQuery: value),
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                return SlideTransition(
-                                  position: Tween<Offset>(
-                                    begin: Offset(0, 0.2), // Start slightly below
-                                    end: Offset(0, 0), // Move up to normal position
-                                  ).animate(CurvedAnimation(
-                                    parent: animation,
-                                    curve: Curves.easeIn, // Smooth easing effect
-                                  )),
-                                  child: child,
-                                );
-                              },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+                          child: TextField(
+                            controller: searchController,
+                            decoration: InputDecoration(
+                              hintText: "Search...",
+                              hintStyle: GoogleFonts.bricolageGrotesque(
+                                fontSize: 18,
+                                color: const Color.fromARGB(255, 196, 196, 196).withOpacity(0.6),
+                                fontWeight: FontWeight.w400,
+                              ),
+                              suffixIcon: Icon(Icons.search,
+                                  color: Colors.white.withOpacity(0.6)),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20)),
+                              filled: true,
+                              fillColor: Colors.white.withOpacity(0.05),
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 25, vertical: 35),
                             ),
-                          );
-                        }
-                      },
+                            style: TextStyle(color: Colors.white),
+                            onSubmitted: (value) {
+                              if (value.isNotEmpty) {
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    transitionDuration: Duration(milliseconds: 500), // Smooth transition
+                                    pageBuilder: (context, animation, secondaryAnimation) => Roadmap(searchQuery: value),
+                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                      return SlideTransition(
+                                        position: Tween<Offset>(
+                                          begin: Offset(0, 0.2), // Start slightly below
+                                          end: Offset(0, 0), // Move up to normal position
+                                        ).animate(CurvedAnimation(
+                                          parent: animation,
+                                          curve: Curves.easeIn, // Smooth easing effect
+                                        )),
+                                        child: child,
+                                      );
+                                    },
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                      ),
                     ),
                   ),
                 ),
-                ),
-              ),
-            ),
-          ),
+              ]
+            )
+          )
         ],
       ),
     );

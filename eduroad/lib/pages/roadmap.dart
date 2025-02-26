@@ -26,6 +26,7 @@ class _RoadmapState extends State<Roadmap> {
             manualData = titles.map((title) => {"title": title, "video": "youtube.com", "article": "wiki.com"}).toList();
         });
     }
+
   @override
   void initState() {
     super.initState();
@@ -42,7 +43,7 @@ class _RoadmapState extends State<Roadmap> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(30, 20, 30, 0),
+      padding: const EdgeInsets.fromLTRB(30, 45, 30, 0),
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
