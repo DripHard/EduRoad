@@ -1,15 +1,15 @@
 import 'package:eduroad/services/api_service.dart';
 import 'package:flutter/material.dart';
 
-class initRoadMap extends StatefulWidget{
+class InitRoadMap extends StatefulWidget{
     final String subject;
-    initRoadMap(this.subject);
+    const InitRoadMap(this.subject, {super.key});
 
     @override
-    _initRoadMapState createState() => _initRoadMapState();
+    State<InitRoadMap>  createState() => _InitRoadMapState();
 }
 
-class _initRoadMapState extends State<initRoadMap> {
+class _InitRoadMapState extends State<InitRoadMap> {
     String? info;
 
     @override

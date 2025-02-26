@@ -1,3 +1,4 @@
+import 'package:eduroad/pages/login_page.dart';
 import 'package:eduroad/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
