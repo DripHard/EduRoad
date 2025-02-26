@@ -79,8 +79,11 @@ class _CustomCardState extends State<CustomCard> {
                       ),
                     ],
                   )
-                : Center(
+                : Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        child:  Center(
                     child: Text(
+                        textAlign: TextAlign.center,
                       widget.data['title'] ?? 'No Title',
                       style: TextStyle(
                         color: Colors.white,
@@ -89,7 +92,8 @@ class _CustomCardState extends State<CustomCard> {
                         decoration: TextDecoration.none,
                       ),
                     ),
-                  ),
+                  ), //Center
+                    ), //Padding
           ),
         ),
       ),
