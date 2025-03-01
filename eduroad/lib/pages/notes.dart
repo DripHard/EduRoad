@@ -38,7 +38,8 @@ class _NotesPageState extends State<NotesPage> {
   Widget build(BuildContext context) {
     String title = widget.data['title'] ?? 'Notes';
 
-    return Scaffold(
+    return SafeArea (
+      child: Scaffold(
       backgroundColor: const Color(0xFF222222),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
@@ -200,6 +201,7 @@ class _NotesPageState extends State<NotesPage> {
           ),
         ),
       ),
+    )
     );
   }
 }

@@ -46,8 +46,9 @@ class _RoadmapState extends State<Roadmap> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(30, 45, 30, 0),
+    return SafeArea (
+      child: Container(
+      padding: const EdgeInsets.fromLTRB(30, 20, 30, 0),
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -132,6 +133,7 @@ class _RoadmapState extends State<Roadmap> {
           ),
         ],
       ),
+    )
     );
   }
 }
