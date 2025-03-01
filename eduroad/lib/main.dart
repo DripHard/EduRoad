@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:ui';
 import 'package:eduroad/pages/roadmap.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 
 void main() async {
@@ -83,7 +84,9 @@ class HomePage extends StatelessWidget {
                             width: 2.0),
                         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        LoginPage();
+                      },
                       child: Text('Sign in',
                           style: TextStyle(fontWeight: FontWeight.w800)),
                     ),
