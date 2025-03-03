@@ -4,6 +4,7 @@ import 'package:eduroad/features/roadmap.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class Roadmap extends StatefulWidget {
   final String searchQuery;
@@ -19,13 +20,17 @@ class _RoadmapState extends State<Roadmap> {
     List<String> titles = [];
     List<Map<String,String>> manualData = [];
 
+    bool hasResult = false;
+
     Future<void> fetchData() async {
         List<String> results  = await RoadMapService.fetch(widget.searchQuery);
         setState(() {
             titles = results;
             manualData = titles.map((title) => {"title": title, "video": "youtube.com", "article": "wiki.com"}).toList();
         });
+        hasResult = true;
     }
+
   @override
   void initState() {
     super.initState();
@@ -42,7 +47,7 @@ class _RoadmapState extends State<Roadmap> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(30, 20, 30, 0),
+      padding: const EdgeInsets.fromLTRB(30, 45, 30, 0),
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -106,6 +111,13 @@ class _RoadmapState extends State<Roadmap> {
             ),
           ),
           const SizedBox(height: 80),
+          if (!hasResult)
+            AnimatedTextKit(
+              animatedTexts: [
+              TyperAnimatedText('Generating', textStyle: TextStyle(fontSize: 20, decoration: TextDecoration.none, color: Colors.white )),
+              TyperAnimatedText('Roadmap...', textStyle: TextStyle(fontSize: 20, decoration: TextDecoration.none, color: Colors.white )),
+            ],)
+          else
           Expanded(
             child: SingleChildScrollView(
               child: Column(
