@@ -21,7 +21,7 @@ class _InitNotesState extends State<InitNotes> {
 
     Future<void> fetch() async {
         String prompt = "Create a detailed Notes about ${widget.title}. Include revelant links and videos.";
-        String notes = await ApiService.fetchInfo(prompt);
+        String notes = await ApiService.fetchGeminiInfo(prompt);
 
         setState((){
             info = notes;
