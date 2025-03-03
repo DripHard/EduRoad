@@ -1,15 +1,11 @@
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:googleapis/calendar/v3.dart';
 import 'package:googleapis_auth/googleapis_auth.dart' as auth;
-import 'calendar.dart';
 
 class AuthService{
     final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-    final GoogleSignIn _googleSignIn =   GoogleSignIn(
-        scopes: [CalendarApi.calendarScope], // Request calendar access
-  );
+    final GoogleSignIn _googleSignIn =   GoogleSignIn();
 
     Future<auth.AuthClient?> signInWithGoogle() async {
         try {
