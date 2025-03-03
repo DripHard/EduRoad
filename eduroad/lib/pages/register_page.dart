@@ -3,29 +3,29 @@ import 'package:eduroad/components/custom_textfields.dart';
 import 'package:eduroad/components/square_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import  'package:eduroad/features/login.dart';
 
-class LoginPage extends StatefulWidget{
+class RegisterPage extends StatefulWidget{
 
     final Function()? onTap;
-
-    const LoginPage ({super.key, required this.onTap});
+    const RegisterPage ({super.key, required this.onTap});
 
     @override
-    State<LoginPage> createState() => _LoginPageState();
+    State<RegisterPage> createState() => _RegisterPageState();
 }
 
 
-class _LoginPageState extends State<LoginPage>{
+
+class _RegisterPageState extends State<RegisterPage>{
 
 
 
     //text editing controller
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
+    final confirmPasswordController = TextEditingController();
 
     //sign in user
-    void signUserIn() async{
+    void signUserUp() async{
         //loading animation
         showDialog(context: context, builder: (context){
             return Center(
@@ -33,12 +33,18 @@ class _LoginPageState extends State<LoginPage>{
             ); //Center
         }); //showDialog
 
-        //sign in
+        //sign up
         try {
-            await FirebaseAuth.instance.signInWithEmailAndPassword(
-                email: emailController.text,
-                password: passwordController.text
-            );
+            //check if the password is correct/confirmed
+            if(passwordController.text == confirmPasswordController.text){
+                await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                    email: emailController.text,
+                    password: passwordController.text
+                );
+            } else {
+                // show error message, password dont match
+                showErrorMessage("Password don't match")
+            }
 
             //stop loading animation
             Navigator.pop(context);
@@ -52,29 +58,7 @@ class _LoginPageState extends State<LoginPage>{
             showErrorMessage(e.code);
         }
     }
-    //alternative sign in
 
-
-    void googleSignIn() async {
-        try{
-            final authClient = await AuthService().signInWithGoogle();
-
-            if (authClient != null){
-                print("Successfully signed in with Google");
-             }
-
-
-            else {
-            print("Google sign-in canceled or failed");
-            }
-        }
-            catch (e){
-                print("Error during alternative sign-in: $e");
-
-
-        }
-
-    }
     //show error message
     void showErrorMessage(String message){
         showDialog(
@@ -110,13 +94,13 @@ class _LoginPageState extends State<LoginPage>{
                             //temporary
                             const Icon(
                                 Icons.topic,
-                                size: 80,
+                                size: 50,
                             ),
 
                             const  SizedBox(height: 50),
 
                             Text(
-                                "Welcome!",
+                                "Create Your Account",
                                 style: TextStyle(color: Colors.grey[700],
                                     fontSize: 16,
                                 ),
@@ -143,27 +127,19 @@ class _LoginPageState extends State<LoginPage>{
 
                             const SizedBox(height: 10),
 
-                            //forgot password
-
-                            Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                        Text(
-                                            "Forgot Password?",
-                                            style: TextStyle(color: Colors.grey[600]),
-                                        ), //Text
-                                    ]
-                                ), //Row
-                            ), //Padding
+                            //confirm password TextField
+                            CustomTextField(
+                                controller: confirmPasswordController,
+                                hintText: "Confirm Password",
+                                obscureText: true,
+                            ),
 
                             const SizedBox(height: 25.0),
 
                             // sign in button
                             CustomButton(
-                                text: "Sign In",
-                                onTap: signUserIn,
+                                text: "Sign Up",
+                                onTap: signUserUp,
                             ),
 
                             const SizedBox(height: 40),
@@ -200,15 +176,22 @@ class _LoginPageState extends State<LoginPage>{
 
                             const SizedBox(height: 35),
 
-                            // google
+                            // google, facebook, apple sign-in buttons
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
+                                children: const [
                                     //google button
-                                    SquareTile(
-                                        imagePath: "assets/GoogleLogo.png",
-                                        onTap: googleSignIn,
-                                ),
+                                    SquareTile(imagePath: "assets/GoogleLogo.png"),
+
+                                    SizedBox(width: 20.0),
+
+                                    //Facebook button
+                                    SquareTile(imagePath: "assets/FacebookLogo.png"),
+
+                                    SizedBox(width: 20.0),
+
+                                    //Apple Button
+                                    SquareTile(imagePath: "assets/AppleLogo.png"),
 
                                 ]
                             ), //Row
@@ -219,7 +202,7 @@ class _LoginPageState extends State<LoginPage>{
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                     Text(
-                                        "Not a member?",
+                                        "Already Have an Account?",
                                         style: TextStyle(color: Colors.grey[700])
                                     ),
                                     const SizedBox(width: 4),
@@ -227,7 +210,7 @@ class _LoginPageState extends State<LoginPage>{
                                     GestureDetector(
                                         onTap: widget.onTap,
                                         child: Text(
-                                            "Register Now",
+                                            "Login Now",
                                             style: TextStyle(
                                                 color: Colors.blue,
                                                 fontWeight: FontWeight.bold
@@ -244,3 +227,4 @@ class _LoginPageState extends State<LoginPage>{
         );
     }
 }
+

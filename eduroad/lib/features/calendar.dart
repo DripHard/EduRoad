@@ -11,9 +11,14 @@ class CalendarService {
   /// Authenticate & Get Calendar API Client
   Future<CalendarApi?> _getCalendarApi() async {
 
-
     try { //User authentication
-      final googleUser = await _googleSignIn.signIn();
+
+        //check if user is already signed in
+        GoogleSignInAccount? googleUser = _googleSignIn.currentUser;
+
+        //If not signed in, prompt sign-in
+      googleUser = await _googleSignIn.signIn();
+
       if (googleUser == null) {
         log("User not signed in", name: "CalendarService", level: 900);
         return null;
