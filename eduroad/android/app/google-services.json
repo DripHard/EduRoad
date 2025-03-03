@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "184739830401",
+    "project_id": "eduroad-36d01",
+    "storage_bucket": "eduroad-36d01.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:184739830401:android:df00bfa1e38178fcca4b80",
+        "android_client_info": {
+          "package_name": "com.theABC.eduroad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "184739830401-tmd797eu0mbu3vvqq5prrnu5sqj06ln2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.theABC.eduroad",
+            "certificate_hash": "bba5600d7a30464497a21f16e0e38b3fd3745cc3"
+          }
+        },
+        {
+          "client_id": "184739830401-c8f5uv39768k1ohp4qtppbmq719rulke.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVtuuDq94TMjdDu8SeUbs_zBu6_dYmGmE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "184739830401-c8f5uv39768k1ohp4qtppbmq719rulke.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "184739830401-8s1vvm4as02p50ur10am3q2arvsp0a0c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.eduroad"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
