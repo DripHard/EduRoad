@@ -14,8 +14,7 @@ dependencies {
 
 
   // TODO: Add the dependencies for Firebase products you want to use
-  // When using the BoM, don't specify versions in Firebase dependencies
-    implementation("com.google.firebase:firebase-analytics")
+  // When using the BoM, don't specify versions in Firebase dependenci
     implementation("com.google.firebase:firebase-auth")
     implementation("androidx.credentials:credentials-play-services-auth")
     implementation("com.google.android.libraries.identity.googleid:googleid")
@@ -44,7 +43,7 @@ android {
         applicationId = "com.theABC.eduroad"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

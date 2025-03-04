@@ -1,4 +1,4 @@
-package com.example.eduroad
+package com.theABC.eduroad
 
 import io.flutter.embedding.android.FlutterActivity
 

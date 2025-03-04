@@ -7,6 +7,11 @@ final String BASE_URL=dotenv.env['BASE_URL'] ?? '';
 final String API_KEY=dotenv.env['API_KEY'] ?? '';
 final String GEMINI_BASE_URL=dotenv.env["GEMINI_BASE_URL"] ?? '';
 final String GEMINI_KEY=dotenv.env["GEMINI_API_KEY"] ?? '';
+final String YOUTUBE_BASE=dotenv.env["YOUTUBE_BASE_URL"] ?? '';
+final String YOUTUBE_KEY=dotenv.env["YOUTUBE_API_KEY"] ?? '';
+final String GOOGLE_BASE=dotenv.env["GOOGLE_SEARCH_BASE_URL"] ?? '';
+final String GOOGLE_API=dotenv.env["GOOGLE_SEARCH_API_KEY"] ?? '';
+final String SEARCH_ENGINE_ID=dotenv.env["SEARCH_ENGINE_ID"] ?? '';
 
 class ApiService {
     static Logger logger = Logger();
@@ -46,10 +51,11 @@ class ApiService {
     }
 
     static Future<String> fetchGeminiInfo(String content)async{
-        var geminiResponse;
         try{
-            geminiResponse = await http.post(
-                Uri.parse("$GEMINI_BASE_URL?key=$GEMINI_KEY"),
+            logger.d(GEMINI_BASE_URL);
+            logger.d(GEMINI_KEY);
+             final geminiResponse = await http.post(
+                Uri.parse("$GEMINI_BASE_URL$GEMINI_KEY"),
                 headers: {
                 'Content-Type': 'application/json',
             },
@@ -58,24 +64,23 @@ class ApiService {
                         {
                         "parts":[{"text": content}]
                         }
-                    ],
+                    ]
                 }),
             );
 
-            if (geminiResponse.statusCode == 200) { //success
-                var data = jsonDecode(geminiResponse.body);
-                if (data.containsKey('candidates') &&
-                    data['candidates'].isNotEmpty &&
-                    data['candidates'][0].containsKey('content') &&
-                    data['candidates'][0]['content'].containsKey('parts') &&
-                    data['candidates'][0]['content']['parts'].isNotEmpty) {
-                    return data['candidates'][0]['content']['parts'][0]['text'];
-                 } else {
-                    return "Error: Response did not contain expected content.";
-                 }
+            if (geminiResponse.statusCode == 200) {
+                 var data = jsonDecode(geminiResponse.body);
+
+                 // Use null-aware operators for safer access
+                 var textResponse = data['candidates']?[0]?['content']?['parts']?[0]?['text'];
+            if (textResponse != null) {
+                 return textResponse;
              } else {
+                 return "Error: Response did not contain expected content.";
+                 }
+               } else {
                  logger.e("API Error: ${geminiResponse.statusCode} - ${geminiResponse.body}");
-                 return "Error: ${geminiResponse.statusCode}";
+                 return "E1rror: ${geminiResponse.statusCode}";
                  }
              }
             catch(err){
@@ -83,4 +88,62 @@ class ApiService {
                 return "An error occured while fetching data.";
         }
     }
-}
+
+static Future<List< String>> fetchYouTubeVideos(String query, String context) async {
+    try {
+        logger.d("Fetching videos for query: $query");
+        String refinedQuery = "$query $context";
+        final response = await http.get(
+            Uri.parse("$YOUTUBE_BASE?part=snippet&q=$refinedQuery&type=video&maxResults=6&videoDuration=medium&key=$YOUTUBE_KEY"),
+        );
+
+        if (response.statusCode == 200) {
+            final data = jsonDecode(response.body);
+            final List videos = data["items"];
+
+            if (videos.isNotEmpty) {
+                return videos
+                    .take(4)
+                    .map((video) {
+                    final String videoId = video["id"]["videoId"] as String;
+                    final String videoUrl = "https://www.youtube.com/watch?v=$videoId";
+                    return videoUrl.contains("shorts") ? null : videoUrl;
+                    })
+                    .where((url) => url != null) // Remove null values
+                    .cast<String>() // Convert to List<String>
+                    .toList();
+                } else {
+                return [];
+            }
+        } else {
+            logger.e("API Error: ${response.statusCode} - ${response.body}");
+            return [];
+        }
+    } catch (err) {
+        logger.e("Error fetching YouTube videos: $err");
+        return [];
+    }}
+
+    static Future<List<String>> fetchOnlineReferences(String query, String context) async {
+    try {
+            String refinedQuery = "$query $context";
+
+        final response = await http.get(
+            Uri.parse("$GOOGLE_BASE?q=$refinedQuery&key=$GOOGLE_API&cx=$SEARCH_ENGINE_ID"),
+
+        );
+        if (response.statusCode == 200) {
+            final data = jsonDecode(response.body);
+            final List items = data["items"] ?? [];
+
+            // Extracts and returns only the links
+            return items.map<String>((item) => item["link"] as String).take(5).toList();
+        } else {
+            print("Error: ${response.statusCode} - ${response.body}");
+            return [];
+        }
+    } catch (e) {
+        print("Error fetching search results: $e");
+        return [];
+    }
+}}

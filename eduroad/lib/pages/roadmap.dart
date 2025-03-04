@@ -18,7 +18,6 @@ class Roadmap extends StatefulWidget {
 class _RoadmapState extends State<Roadmap> {
   late TextEditingController _searchController;
     List<String> titles = [];
-    List<Map<String,String>> manualData = [];
 
     bool hasResult = false;
 
@@ -26,7 +25,6 @@ class _RoadmapState extends State<Roadmap> {
         List<String> results  = await RoadMapService.fetch(widget.searchQuery);
         setState(() {
             titles = results;
-            manualData = titles.map((title) => {"title": title, "video": "youtube.com", "article": "wiki.com"}).toList();
         });
         hasResult = true;
     }
@@ -121,10 +119,13 @@ class _RoadmapState extends State<Roadmap> {
           Expanded(
             child: SingleChildScrollView(
               child: Column(
-                children: manualData.map((data) {
+                children: titles.map((data) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 50),
-                    child: CustomCard(data: data),
+                    child: CustomCard(
+                                data: data,
+                                searchQuery: widget.searchQuery
+                            ),
                   );
                 }).toList(),
               ),
