@@ -6,7 +6,6 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:eduroad/features/notes.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class NotesPage extends StatefulWidget {
