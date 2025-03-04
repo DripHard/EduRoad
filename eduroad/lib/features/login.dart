@@ -3,11 +3,12 @@ import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:googleapis_auth/googleapis_auth.dart' as auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService{
     final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
     final GoogleSignIn _googleSignIn =   GoogleSignIn();
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
 
     Future<auth.AuthClient?> signInWithGoogle() async {
         try {
@@ -54,17 +55,21 @@ class AuthService{
             return null;
         }
     }
-    Future<void> saveUserToFirestore(User user) async {
-    DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+
+  Future<void> saveUserToFirestore(User user) async {
+    DocumentReference userRef = _firestore.collection('Users').doc(user.uid);
+    DocumentSnapshot userDoc = await userRef.get();
 
     if (!userDoc.exists) {
-        // Save the user only if it doesn't exist
-        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-            'uid': user.uid,
-            'timestamp': FieldValue.serverTimestamp(),
-        });
+      // Save the user only if it doesn't exist
+      await userRef.set({
+        'uid': user.uid,
+        'googleEmail': user.email,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
     }
-}
+  }
 
     Future<void> signOut() async {
         await _firebaseAuth.signOut();

@@ -3,6 +3,7 @@ import 'package:eduroad/components/custom_textfields.dart';
 import 'package:eduroad/components/square_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RegisterPage extends StatefulWidget{
 
@@ -23,7 +24,8 @@ class _RegisterPageState extends State<RegisterPage>{
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
-
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    UserCredential? userCredential;
     //sign in user
     void signUserUp() async{
         //loading animation
@@ -37,15 +39,18 @@ class _RegisterPageState extends State<RegisterPage>{
         try {
             //check if the password is correct/confirmed
             if(passwordController.text == confirmPasswordController.text){
-                await FirebaseAuth.instance.createUserWithEmailAndPassword(
+               userCredential =  await FirebaseAuth.instance.createUserWithEmailAndPassword(
                     email: emailController.text,
                     password: passwordController.text
                 );
             } else {
                 // show error message, password dont match
-                showErrorMessage("Password don't match")
+                showErrorMessage("Password don't match");
             }
-
+            User? user = userCredential?.user;
+            if (user != null) {
+        await _saveUserToFirestore(user);
+      }
             //stop loading animation
             Navigator.pop(context);
 
@@ -58,6 +63,19 @@ class _RegisterPageState extends State<RegisterPage>{
             showErrorMessage(e.code);
         }
     }
+    Future<void> _saveUserToFirestore(User user) async {
+    DocumentReference userRef = _firestore.collection('Users').doc(user.uid);
+    DocumentSnapshot userDoc = await userRef.get();
+
+    if (!userDoc.exists) {
+      await userRef.set({
+        'uid': user.uid,
+        'firebaseEmail': user.email,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+    }
+  }
 
     //show error message
     void showErrorMessage(String message){
