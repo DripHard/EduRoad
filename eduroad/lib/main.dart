@@ -23,10 +23,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'EduRoad',
-      home: Splash(),
+      initialRoute: '/',  // Set the initial route
+      routes: {
+        '/': (context) => Splash(),  // Default landing page
+        '/main': (context) => HomePage(),
+        '/login': (context) => LoginPage(),
+      },
     );
   }
 }
+
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
