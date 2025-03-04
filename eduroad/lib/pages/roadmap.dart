@@ -17,19 +17,23 @@ class Roadmap extends StatefulWidget {
 
 class _RoadmapState extends State<Roadmap> {
   late TextEditingController _searchController;
-    List<String> titles = [];
-    List<Map<String,String>> manualData = [];
+  List<String> titles = [];
+  List<Map<String,String>> manualData = [];
 
-    bool hasResult = false;
+  bool hasResult = false;
 
-    Future<void> fetchData() async {
-        List<String> results  = await RoadMapService.fetch(widget.searchQuery);
-        setState(() {
-            titles = results;
-            manualData = titles.map((title) => {"title": title, "video": "youtube.com", "article": "wiki.com"}).toList();
-        });
-        hasResult = true;
-    }
+  Future<void> fetchData() async {
+      List<String> results  = await RoadMapService.fetch(widget.searchQuery);
+      setState(() {
+          titles = results;
+          manualData = titles.map((title) => {"title": title, "video": "youtube.com", "article": "wiki.com"}).toList();
+      });
+      hasResult = true;
+  }
+
+  List<CustomCard> get cardList {
+    return manualData.map((data) => CustomCard(data: data)).toList();
+  }
 
   @override
   void initState() {
@@ -43,6 +47,13 @@ class _RoadmapState extends State<Roadmap> {
     _searchController.dispose();
     super.dispose();
   }
+
+  void _onDelete(int index) {
+  setState(() {
+    manualData.removeAt(index);
+  });
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -119,16 +130,47 @@ class _RoadmapState extends State<Roadmap> {
               TyperAnimatedText('Roadmap...', textStyle: TextStyle(fontSize: 20, decoration: TextDecoration.none, color: Colors.white )),
             ],)
           else
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: manualData.map((data) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 50),
-                    child: CustomCard(data: data),
-                  );
-                }).toList(),
-              ),
+           Expanded(
+            child: ReorderableListView(
+              onReorder: (oldIndex, newIndex) {
+                setState(() {
+                  if (newIndex > oldIndex) {
+                    newIndex -= 1;
+                  }
+                  final item = manualData.removeAt(oldIndex);
+                  manualData.insert(newIndex, item);
+                });
+              },
+              proxyDecorator: (Widget child, int index, Animation<double> animation) {
+                return Opacity(
+                  opacity: 0.5,
+                  child: child,
+                );
+              },
+              children: manualData.asMap().entries.map((entry) {
+                int index = entry.key;
+                Map<String, String> data = entry.value;
+
+                return Dismissible(
+                  key: ValueKey(data["title"]),
+                  direction: DismissDirection.startToEnd,
+                  background: Container(
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    color: const Color.fromARGB(255, 241, 118, 3),
+                    height: 50,
+                    child: const Icon(Icons.delete, color: Colors.white, size: 30),
+                  ),
+                  onDismissed: (_) => _onDelete(index),
+                  child: ReorderableDelayedDragStartListener(
+                    index: index,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 20, top: 20),
+                      child: CustomCard(data: data),
+                    ),
+                  ),
+                );
+              }).toList(),
             ),
           ),
         ],
