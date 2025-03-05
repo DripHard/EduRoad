@@ -124,9 +124,7 @@ We’re on a mission to **revolutionize learning**. If you believe in making edu
 📢 **Spread the Word** – Share EduRoad with your network!  
 💬 **Feedback?** – Open an issue or reach out!  
 
-🔗 **Website:** [Coming Soon]  
-📧 **Contact:** support@eduroad.ai  
-📜 **License:** MIT  
+📧 **Contact:** jed.lordy123@gmail.com 
 
 🚀 *Let’s guide the world’s learners together!*
 
