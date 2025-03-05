@@ -8,13 +8,16 @@ class RoadMapService {
     static Future<List<String>> fetch(String subject) async {
         String key = "roadmap_$subject";
 
-        await LocalStorage.saveSearch(subject); // Save locally
-        //  ✅Check if the roadmap exists locally
+        // Save locally
+        await LocalStorage.saveSearch(subject);
+
+        //Check if the roadmap exists locally
         Map<String, String> localData = await LocalStorage.readData();
+
         if (localData.containsKey(key)) {
-      logger.i("Loaded roadmap for '$subject' from local storage.");
-      return List<String>.from(jsonDecode(localData[key] ?? '')); // Convert JSON string back to List
-    }
+            return List<String>.from(jsonDecode(localData[key] ?? '')); // Convert JSON string back to List
+        }
+
         //this would be the prompt to make the roadmap
         String content = "Make a list from simple to complex for a roadmap about $subject. Just a list of concepts no intro text and no bullters (dots or numbers).";
 

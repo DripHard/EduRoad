@@ -15,6 +15,7 @@ final String SEARCH_ENGINE_ID=dotenv.env["SEARCH_ENGINE_ID"] ?? '';
 
 class ApiService {
     static Logger logger = Logger();
+
     static Future<String> fetchInfo(String content)async{
         var response;
         try{
@@ -52,8 +53,6 @@ class ApiService {
 
     static Future<String> fetchGeminiInfo(String content)async{
         try{
-            logger.d(GEMINI_BASE_URL);
-            logger.d(GEMINI_KEY);
              final geminiResponse = await http.post(
                 Uri.parse("$GEMINI_BASE_URL$GEMINI_KEY"),
                 headers: {
@@ -91,7 +90,8 @@ class ApiService {
 
 static Future<List< String>> fetchYouTubeVideos(String query, String context) async {
     try {
-        logger.d("Fetching videos for query: $query");
+
+        //to avoid unrelevant results
         String refinedQuery = "$query $context";
         final response = await http.get(
             Uri.parse("$YOUTUBE_BASE?part=snippet&q=$refinedQuery&type=video&maxResults=6&videoDuration=medium&key=$YOUTUBE_KEY"),
@@ -125,16 +125,17 @@ static Future<List< String>> fetchYouTubeVideos(String query, String context) as
     }}
 
     static Future<List<String>> fetchOnlineReferences(String query, String context) async {
-    try {
+        try {
+            //to avoid unrelevant results
             String refinedQuery = "$query $context";
 
-        final response = await http.get(
-            Uri.parse("$GOOGLE_BASE?q=$refinedQuery&key=$GOOGLE_API&cx=$SEARCH_ENGINE_ID"),
+            final response = await http.get(
+                Uri.parse("$GOOGLE_BASE?q=$refinedQuery&key=$GOOGLE_API&cx=$SEARCH_ENGINE_ID"),
 
-        );
-        if (response.statusCode == 200) {
-            final data = jsonDecode(response.body);
-            final List items = data["items"] ?? [];
+            );
+            if (response.statusCode == 200) {
+                final data = jsonDecode(response.body);
+                final List items = data["items"] ?? [];
 
             // Extracts and returns only the links
             return items.map<String>((item) => item["link"] as String).take(5).toList();
@@ -142,8 +143,9 @@ static Future<List< String>> fetchYouTubeVideos(String query, String context) as
             print("Error: ${response.statusCode} - ${response.body}");
             return [];
         }
-    } catch (e) {
-        print("Error fetching search results: $e");
-        return [];
+        } catch (e) {
+            print("Error fetching search results: $e");
+            return [];
+        }
     }
-}}
+}

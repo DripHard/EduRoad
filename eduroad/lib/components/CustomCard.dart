@@ -13,11 +13,11 @@ class CustomCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-                    Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => NotesPage(title: data,
-                            concept: searchQuery),
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => NotesPage(title: data,
+                          concept: searchQuery),
                     ),
                 );
             },

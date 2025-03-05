@@ -5,32 +5,41 @@ import 'package:logger/logger.dart';
 
 class LocalStorage {
   static final Logger logger = Logger();
-  static const String fileName = 'data.json';
+  static const String dataFileName = 'data.json';
+  static const String searchHistoryFileName = 'search_history.json';
 
-  // Get file path
-  static Future<File> _getFile() async {
+  // Get the directory path
+  static Future<String> _getDirectoryPath() async {
     final directory = await getApplicationDocumentsDirectory();
-    return File('${directory.path}/$fileName');
+    return directory.path;
   }
 
-  // Save data
+  // Get file reference
+  static Future<File> _getFile(String fileName) async {
+    final path = await _getDirectoryPath();
+    return File('$path/$fileName');
+  }
+
+  // Save key-value data
   static Future<void> saveData(String key, String data) async {
     try {
-      final file = await _getFile();
+      final file = await _getFile(dataFileName);
       Map<String, String> storageData = await readData();
+
       storageData[key] = data;
       await file.writeAsString(jsonEncode(storageData));
-      logger.i("Data saved locally for key: $key");
+
+      logger.i(" Data saved for key: $key");
     } catch (e) {
-      logger.e("Error saving local data: $e");
+      logger.e(" Error saving local data: $e");
     }
   }
 
-  // Read data
- static Future<Map<String, String>> readData() async {
+  // Read key-value data
+  static Future<Map<String, String>> readData() async {
     try {
-      final file = await _getFile();
-      if (!await file.exists()) return {}; // Return empty if file doesn't exist
+      final file = await _getFile(dataFileName);
+      if (!await file.exists()) return {}; // Return empty map if file does not exist
 
       String content = await file.readAsString();
       final decodedData = jsonDecode(content);
@@ -38,36 +47,53 @@ class LocalStorage {
       if (decodedData is Map<String, dynamic>) {
         return decodedData.map((key, value) => MapEntry(key, value.toString()));
       } else {
-        print("⛔ Invalid data format in local storage.");
+        logger.e("Invalid format in data.json. Resetting file.");
+        await file.writeAsString(jsonEncode({})); // Reset file
         return {};
       }
     } catch (e) {
-      print("⛔ Error reading local data: $e");
+      logger.e("Error reading local data: $e");
       return {};
     }
   }
+
   // Save search history
   static Future<void> saveSearch(String subject) async {
-    final file = await _getFile();
-    List<String> searchHistory = await readSearchHistory();
+    try {
+      final file = await _getFile(searchHistoryFileName);
+      List<String> searchHistory = await readSearchHistory();
 
-    if (!searchHistory.contains(subject)) {
-      searchHistory.insert(0, subject); // Add to the top
-      if (searchHistory.length > 10) {
-        searchHistory = searchHistory.sublist(0, 10); // Limit to 10 searches
+      if (!searchHistory.contains(subject)) {
+        searchHistory.insert(0, subject); // Add new search at the top
+        if (searchHistory.length > 10) {
+          searchHistory = searchHistory.sublist(0, 10); // Keep last 10 searches
+        }
+        await file.writeAsString(jsonEncode(searchHistory));
+        logger.i(" Search history updated");
       }
-      await file.writeAsString(jsonEncode(searchHistory));
+    } catch (e) {
+      logger.e(" Error saving search history: $e");
     }
   }
 
   // Read search history
   static Future<List<String>> readSearchHistory() async {
     try {
-      final file = await _getFile();
+      final file = await _getFile(searchHistoryFileName);
       if (!await file.exists()) return [];
+
       String contents = await file.readAsString();
-      return List<String>.from(jsonDecode(contents));
+      final decodedData = jsonDecode(contents);
+
+      if (decodedData is List) {
+        return List<String>.from(decodedData);
+      } else {
+        logger.e(" Invalid format in search_history.json. Resetting file.");
+        await file.writeAsString(jsonEncode([])); // Reset file
+        return [];
+      }
     } catch (e) {
+      logger.e(" Error reading search history: $e");
       return [];
     }
   }
