@@ -35,20 +35,24 @@ class _NotesPageState extends State<NotesPage> {
     }
   final videoURL = "https://youtu.be/sdYdnpYn-1o?si=OHPGE4N3WA8Dnwc0";
     Future<void> fetchNotes() async {
-        logger.d(widget.title);
+
+        //fetch necessary data
         String introduction  = await NoteService.fetchIntro(widget.title, widget.concept);
         String main  = await NoteService.fetchBody(widget.title, widget.concept);
         List<String> ylink = await NoteService.fetchYouTubeLink(widget.title, widget.concept);
         List<String> arlink  = await NoteService.fetchArticleLink(widget.title, widget.concept);
         String summ = await NoteService.fetchSummary(widget.title, widget.concept);
+
+        //prepare the youtube links
         List<YoutubePlayerController> controllers =ylink
-         .map((url) => YoutubePlayer.convertUrlToId(url))
-        .where((id) => id != null)
-        .map((id) => YoutubePlayerController(
-              initialVideoId: id!,
-              flags: const YoutubePlayerFlags(autoPlay: false),
+            .map((url) => YoutubePlayer.convertUrlToId(url))
+            .where((id) => id != null)
+            .map((id) => YoutubePlayerController(
+                  initialVideoId: id!,
+                  flags: const YoutubePlayerFlags(autoPlay: false),
             ))
-        .toList();
+            .toList();
+
         setState((){
             intro = introduction;
             body = main;
@@ -57,12 +61,6 @@ class _NotesPageState extends State<NotesPage> {
             summary = summ;
             _controllers = controllers;
             isLoading = false; // Mark loading as complete
-
-    logger.d(intro);
-    logger.d(body);
-    logger.d(videolink);
-    logger.d(articlelink);
-    logger.d(summary);
         });
         }
 
@@ -114,7 +112,7 @@ class _NotesPageState extends State<NotesPage> {
                             textStyle: GoogleFonts.bricolageGrotesque(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
-                              fontSize: 23,
+                              fontSize: 17,
                             ),
                             speed: const Duration(milliseconds: 80),
                             cursor: '|',
@@ -139,7 +137,12 @@ class _NotesPageState extends State<NotesPage> {
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: isLoading
-            ? const Center(child: CircularProgressIndicator()) // Show loading
+            ?  Center(
+              child: AnimatedTextKit(
+              animatedTexts: [
+              TyperAnimatedText('Generating', textStyle: TextStyle(fontSize: 20, decoration: TextDecoration.none, color: Colors.white )),
+              TyperAnimatedText('Notes...', textStyle: TextStyle(fontSize: 20, decoration: TextDecoration.none, color: Colors.white )),
+            ],))
             : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -168,17 +171,17 @@ class _NotesPageState extends State<NotesPage> {
                 ),
               ),
               const SizedBox(height: 10),
-                                Column(
-                                    children: _controllers
-                                    .map((controller) => Padding(
-                                        padding: const EdgeInsets.only(bottom: 16),
-                                        child: YoutubePlayer(
-                                            controller: controller,
-                                            showVideoProgressIndicator: true,
-                                        ),
-                                    ))
-                                    .toList(),
-                                ),
+                    Column(
+                        children: _controllers
+                        .map((controller) => Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                            child: YoutubePlayer(
+                            controller: controller,
+                            showVideoProgressIndicator: true,
+                        ),
+                    ))
+                 .toList(),
+              ),
 
               const SizedBox(height: 16),
               Text(

@@ -4,6 +4,7 @@ import 'package:eduroad/components/square_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eduroad/features/login.dart';
 
 class RegisterPage extends StatefulWidget{
 
@@ -197,20 +198,13 @@ class _RegisterPageState extends State<RegisterPage>{
                             // google, facebook, apple sign-in buttons
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
+                                children: [
                                     //google button
-                                    SquareTile(imagePath: "assets/GoogleLogo.png"),
+                                    SquareTile(
+                                        imagePath: "assets/GoogleLogo.png",
+                                        onTap: () => AuthService().signInWithGoogle()),
 
                                     SizedBox(width: 20.0),
-
-                                    //Facebook button
-                                    SquareTile(imagePath: "assets/FacebookLogo.png"),
-
-                                    SizedBox(width: 20.0),
-
-                                    //Apple Button
-                                    SquareTile(imagePath: "assets/AppleLogo.png"),
-
                                 ]
                             ), //Row
 

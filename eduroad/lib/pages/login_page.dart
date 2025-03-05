@@ -1,246 +1,197 @@
-import 'package:eduroad/components/custom_button.dart';
-import 'package:eduroad/components/custom_textfields.dart';
-import 'package:eduroad/components/square_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import  'package:eduroad/features/login.dart';
 
-class LoginPage extends StatefulWidget{
-
-    final Function()? onTap;
-
-    const LoginPage ({super.key, required this.onTap});
-
-    @override
-    State<LoginPage> createState() => _LoginPageState();
-}
-
-
-class _LoginPageState extends State<LoginPage>{
-
-
+class LoginPage extends StatelessWidget {
+   LoginPage({super.key});
 
     //text editing controller
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
-
-    //sign in user
-    void signUserIn() async{
-        //loading animation
-        showDialog(context: context, builder: (context){
-            return Center(
-                child: CircularProgressIndicator(),
-            ); //Center
-        }); //showDialog
-
-        //sign in
-        try {
-            await FirebaseAuth.instance.signInWithEmailAndPassword(
-                email: emailController.text,
-                password: passwordController.text
-            );
-
-            //stop loading animation
-            Navigator.pop(context);
-
-        } on FirebaseAuthException catch (e) {
-
-            //stop loading animation
-            Navigator.pop(context);
-
-            //show error message
-            showErrorMessage(e.code);
-        }
-    }
-    //alternative sign in
-
-
-    void googleSignIn() async {
-        try{
-            final authClient = await AuthService().signInWithGoogle();
-
-            if (authClient != null){
-                print("Successfully signed in with Google");
-             }
-
-
-            else {
-            print("Google sign-in canceled or failed");
-            }
-        }
-            catch (e){
-                print("Error during alternative sign-in: $e");
-
-
-        }
-
-    }
-    //show error message
-    void showErrorMessage(String message){
-        showDialog(
-            context: context,
-            builder: (context){
-                return AlertDialog(
-                    title: Text(
-                        message,
-                        style: TextStyle(color: Colors.white),
-                    ),
-                ); // AlertDialog
-            }
-        ); //showDialog
-    }
-
 
 
     void signUserOut() async {
         await FirebaseAuth.instance.signOut();
     }
 
-    @override
-    Widget build(BuildContext context){
-        return Scaffold(
-            backgroundColor: Colors.grey[300],
-            body: SafeArea(
-                child: SingleChildScrollView(
-                    child: Column(
+  @override
+  Widget build(BuildContext context) {
+
+
+    //sign in user
+    void signUserIn() async{
+            Navigator.pushNamed(context, '/home');
+    }
+    //alternative sign in
+
+
+    void googleSignIn() async {
+            Navigator.pushNamed(context, '/home');
+    }
+
+
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Background Gradient
+          Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xFF121212), // Dark top
+                  Color(0xFF2A1E11),
+                  Color(0xFFF78000), // Orange bottom
+                ],
+              ),
+            ),
+          ),
+
+          // Content
+          SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Logo Text
+                Padding(
+                  padding: const EdgeInsets.only(top: 25, left: 30),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/main');
+                      },
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'ed',
+                              style: GoogleFonts.bricolageGrotesque(
+                                fontSize: 22,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            TextSpan(
+                              text: 'R',
+                              style: GoogleFonts.bricolageGrotesque(
+                                fontSize: 28,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Login Box - Positioned to Overlap the Bottom
+          Positioned(
+            bottom: -20, // Adjust this value to control the overlap
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.85,
+                padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.25),
+                      offset: const Offset(0, 4),
+                      blurRadius: 10,
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Email Input
+                    TextField(
+                    controller: emailController,
+                      decoration: InputDecoration(
+                        labelText: "Email",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+
+                    // Password Input
+                    TextField(
+                        controller: passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: "Password",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Sign-in Button
+                    ElevatedButton(
+                      onPressed: signUserIn,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        minimumSize: const Size(double.infinity, 50),
+                      ),
+                      child: const Text("Sign in", style: TextStyle(color: Colors.white)),
+                    ),
+                    const SizedBox(height: 15),
+
+                    // Google Sign-in Button
+                    OutlinedButton(
+                      onPressed: googleSignIn,
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.black,
+                        backgroundColor: Colors.white,
+                        side: const BorderSide(color: Colors.black12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        minimumSize: const Size(double.infinity, 50),
+                      ),
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                            const SizedBox(height: 50),
-                            //eduroadlogo
-                            //temporary
-                            const Icon(
-                                Icons.topic,
-                                size: 80,
-                            ),
-
-                            const  SizedBox(height: 50),
-
-                            Text(
-                                "Welcome!",
-                                style: TextStyle(color: Colors.grey[700],
-                                    fontSize: 16,
-                                ),
-                            ),
-
-
-                            const SizedBox(height: 25),
-
-                            //username TextField
-                            CustomTextField(
-                                controller: emailController,
-                                hintText: "Username or Email",
-                                obscureText: false,
-                            ),
-
-                            const SizedBox(height: 10),
-
-                            //password TextField
-                            CustomTextField(
-                                controller: passwordController,
-                                hintText: "Password",
-                                obscureText: true,
-                            ),
-
-                            const SizedBox(height: 10),
-
-                            //forgot password
-
-                            Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                        Text(
-                                            "Forgot Password?",
-                                            style: TextStyle(color: Colors.grey[600]),
-                                        ), //Text
-                                    ]
-                                ), //Row
-                            ), //Padding
-
-                            const SizedBox(height: 25.0),
-
-                            // sign in button
-                            CustomButton(
-                                text: "Sign In",
-                                onTap: signUserIn,
-                            ),
-
-                            const SizedBox(height: 40),
-
-                            //alternative sign-in
-                            Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                                child: Row(
-                                    children: [
-                                        Expanded(
-                                            child: Divider(
-                                                thickness: 0.5,
-                                                color: Colors.grey[400]
-                                            ) // Divider
-                                        ), //Expanded
-
-                                        Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                            child: Text(
-                                                "Or Continue With",
-                                                style: TextStyle(color: Colors.grey[700]),
-                                            ), //Text
-                                        ), //Padding
-
-                                        Expanded(
-                                            child: Divider(
-                                                thickness: 0.5,
-                                                color: Colors.grey[400]
-                                            ) // Divider
-                                        ), //Expanded
-                                    ]
-                                ) //Row
-                            ), // Padding
-
-                            const SizedBox(height: 35),
-
-                            // google
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                    //google button
-                                    SquareTile(
-                                        imagePath: "assets/GoogleLogo.png",
-                                        onTap: googleSignIn,
-                                ),
-
-                                ]
-                            ), //Row
-
-                            const SizedBox(height: 35),
-
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                    Text(
-                                        "Not a member?",
-                                        style: TextStyle(color: Colors.grey[700])
-                                    ),
-                                    const SizedBox(width: 4),
-
-                                    GestureDetector(
-                                        onTap: widget.onTap,
-                                        child: Text(
-                                            "Register Now",
-                                            style: TextStyle(
-                                                color: Colors.blue,
-                                                fontWeight: FontWeight.bold
-                                            ), //TextStyle
-                                        ), // Text
-                                    ),
-                                ],
-                            ), //Row
-                        ]
-                    )
-                )
-
-            )
-        );
-    }
+                          SizedBox(
+                            height: 33,
+                            width: 33,
+                            child: Image.asset('assets/google.png', fit: BoxFit.contain),
+                          ),
+                          const SizedBox(width: 5),
+                          const Text("Sign in with Google"),
+                        ],
+                      ),
+                    ),
+                      const SizedBox(height: 80),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
+

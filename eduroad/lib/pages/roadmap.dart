@@ -43,6 +43,11 @@ class _RoadmapState extends State<Roadmap> {
     _searchController.dispose();
     super.dispose();
   }
+    void _onDelete(int index) {
+        setState(() {
+            titles.removeAt(index);
+        });
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -118,22 +123,51 @@ class _RoadmapState extends State<Roadmap> {
               TyperAnimatedText('Roadmap...', textStyle: TextStyle(fontSize: 20, decoration: TextDecoration.none, color: Colors.white )),
             ],)
           else
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: titles.map((data) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 50),
-                    child: CustomCard(
-                                data: data,
-                                searchQuery: widget.searchQuery
-                            ),
-                  );
-                }).toList(),
-              ),
+            Expanded(
+            child: ReorderableListView(
+              onReorder: (oldIndex, newIndex) {
+                setState(() {
+                  if (newIndex > oldIndex) {
+                    newIndex -= 1;
+                  }
+                  final item = titles.removeAt(oldIndex);
+                  titles.insert(newIndex, item);
+                });
+              },
+              proxyDecorator: (Widget child, int index, Animation<double> animation) {
+                return Opacity(
+                  opacity: 0.5,
+                  child: child,
+                );
+              },
+              children: titles.asMap().entries.map((entry) {
+                int index = entry.key;
+                String data = entry.value;
+
+                return Dismissible(
+                  key: ValueKey(data),
+                  direction: DismissDirection.startToEnd,
+                  background: Container(
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    color: const Color.fromARGB(255, 241, 118, 3),
+                    height: 50,
+                    child: const Icon(Icons.delete, color: Colors.white, size: 30),
+                  ),
+                  onDismissed: (_) => _onDelete(index),
+                  child: ReorderableDelayedDragStartListener(
+                    index: index,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 20, top: 20),
+                      child: CustomCard(data: data,
+                                        searchQuery: widget.searchQuery),
+                    ),
+                  ),
+                );
+              }).toList(),
             ),
-          ),
-        ],
+          ), //Expanded
+                ]
       ),
     );
   }

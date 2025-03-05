@@ -1,3 +1,4 @@
+import 'package:eduroad/pages/register_page.dart';
 import 'package:eduroad/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -7,6 +8,9 @@ import 'package:eduroad/pages/roadmap.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:eduroad/pages/login_page.dart';
+import 'package:eduroad/pages/home.dart';
 
 void main() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +33,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'EduRoad',
-      home: Splash(),
+      initialRoute: '/',  // Set the initial route
+      routes: {
+        '/': (context) => Splash(),  // Default landing page
+        '/main': (context) => HomePage(),
+        '/login': (context) => LoginPage(),
+            '/home' : (context) => HomePageAccount(),
+      },
     );
   }
 }
@@ -40,91 +50,95 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
   TextEditingController searchController = TextEditingController();
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF121212), Color(0x752A1E11), Color(0xFFF78000)],
-          stops: [0.0, 0.46, 1.0],
-        ),
-      ),
-      child: Stack(
-        children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(30, 45, 30, 0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+     return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: SafeArea(
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFF121212), Color(0x752A1E11), Color(0xFFF78000)],
+              stops: [0.0, 0.46, 1.0],
+            ),
+          ),
+          child: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(30, 20, 30, 0), // Adjusted padding
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'ed',
-                            style: GoogleFonts.bricolageGrotesque(
-                              fontSize: 20,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                            ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'ed',
+                                style: GoogleFonts.bricolageGrotesque(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              TextSpan(
+                                text: 'R',
+                                style: GoogleFonts.bricolageGrotesque(
+                                  fontSize: 25,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
                           ),
-                          TextSpan(
-                            text: 'R',
-                            style: GoogleFonts.bricolageGrotesque(
-                              fontSize: 25,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                            ),
+                        ),
+                        OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            side: const BorderSide(
+                                color: Color.fromARGB(255, 94, 81, 81),
+                                width: 2.0),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 20),
                           ),
-                        ],
-                      ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => LoginPage()),
+                            );
+                          },
+                          child: const Text('Sign in',
+                              style: TextStyle(fontWeight: FontWeight.w800)),
+                        ),
+                      ],
                     ),
-                    OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        side: BorderSide(
-                            color: const Color.fromARGB(255, 94, 81, 81),
-                            width: 2.0),
-                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    const SizedBox(height: 30),
+                    Container(
+                      margin: const EdgeInsets.only(left: 15),
+                      child: RichText(
+                        text: TextSpan(
+                          text: 'Welcome...',
+                          style: GoogleFonts.bricolageGrotesque(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
                       ),
-                      onPressed: () {},
-                      child: Text('Sign in',
-                          style: TextStyle(fontWeight: FontWeight.w800)),
                     ),
                   ],
                 ),
-                SizedBox(height: 30),
-                Container(
-                  margin: EdgeInsets.only(left: 15),
-                  child: RichText(
-                    text: TextSpan(
-                      text: 'Welcome...',
-                      style: GoogleFonts.bricolageGrotesque(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Scaffold(
-            backgroundColor: Colors.transparent,
-            resizeToAvoidBottomInset: true,
-            body: Stack(
-              children: [
-                Positioned(
-                  left: 30,
-                  right: 30,
-                  bottom: 100,
-                  child: Hero (
-                    tag: 'searchbar',
-                    child: Material(
+              ),
+              Positioned(
+                left: 30,
+                right: 30,
+                bottom: 100,
+                child: Hero(
+                  tag: 'searchbar',
+                  child: Material(
                     color: Colors.transparent,
                     child: Container(
                       decoration: BoxDecoration(
@@ -133,7 +147,7 @@ class HomePage extends StatelessWidget {
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.25),
-                            offset: Offset(0, 4),
+                            offset: const Offset(0, 4),
                             blurRadius: 4,
                           ),
                         ],
@@ -148,7 +162,8 @@ class HomePage extends StatelessWidget {
                               hintText: "Search...",
                               hintStyle: GoogleFonts.bricolageGrotesque(
                                 fontSize: 18,
-                                color: const Color.fromARGB(255, 196, 196, 196).withOpacity(0.6),
+                                color: const Color.fromARGB(255, 196, 196, 196)
+                                    .withOpacity(0.6),
                                 fontWeight: FontWeight.w400,
                               ),
                               suffixIcon: Icon(Icons.search,
@@ -157,25 +172,31 @@ class HomePage extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(20)),
                               filled: true,
                               fillColor: Colors.white.withOpacity(0.05),
-                              contentPadding:
-                                  EdgeInsets.symmetric(horizontal: 25, vertical: 35),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 25, vertical: 35),
                             ),
-                            style: TextStyle(color: Colors.white),
+                            style: const TextStyle(color: Colors.white),
                             onSubmitted: (value) {
                               if (value.isNotEmpty) {
                                 Navigator.push(
                                   context,
                                   PageRouteBuilder(
-                                    transitionDuration: Duration(milliseconds: 500), // Smooth transition
-                                    pageBuilder: (context, animation, secondaryAnimation) => Roadmap(searchQuery: value),
-                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                    transitionDuration:
+                                        const Duration(milliseconds: 500),
+                                    pageBuilder: (context, animation,
+                                            secondaryAnimation) =>
+                                        Roadmap(searchQuery: value),
+                                    transitionsBuilder: (context, animation,
+                                        secondaryAnimation, child) {
                                       return SlideTransition(
                                         position: Tween<Offset>(
-                                          begin: Offset(0, 0.2), // Start slightly below
-                                          end: Offset(0, 0), // Move up to normal position
+                                          begin: const Offset(
+                                              0, 0.2), // Start slightly below
+                                          end: const Offset(
+                                              0, 0), // Move up to normal position
                                         ).animate(CurvedAnimation(
                                           parent: animation,
-                                          curve: Curves.easeIn, // Smooth easing effect
+                                          curve: Curves.easeIn,
                                         )),
                                         child: child,
                                       );
@@ -187,15 +208,15 @@ class HomePage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      ),
                     ),
                   ),
                 ),
-              ]
-            )
-          )
-        ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 }
+
