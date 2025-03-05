@@ -176,7 +176,7 @@ class LoginPage extends StatelessWidget {
                           SizedBox(
                             height: 33,
                             width: 33,
-                            child: Image.asset('assets/google.png', fit: BoxFit.contain),
+                            child: Image.asset('assets/GoogleLogo.png', fit: BoxFit.contain),
                           ),
                           const SizedBox(width: 5),
                           const Text("Sign in with Google"),
